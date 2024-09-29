@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Calorie Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f7b733, #fc4a1a);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fc4a1a;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #fc4a1a;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f7b733;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestions p {
+            margin: 0;
+            padding: 5px 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Daily Calorie Calculator</h1>
+        <form id="calorieForm">
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" placeholder="Enter your age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" required>
+                    <option value="" disabled selected>Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="height">Height (in cm):</label>
+                <input type="number" id="height" placeholder="Enter your height" required>
+            </div>
+
+            <div class="form-group">
+                <label for="weight">Weight (in kg):</label>
+                <input type="number" id="weight" placeholder="Enter your weight" required>
+            </div>
+
+            <div class="form-group">
+                <label for="activity">Morning Activities:</label>
+                <select id="activity" required>
+                    <option value="" disabled selected>Select your activity</option>
+                    <option value="workout">Workout</option>
+                    <option value="yoga">Yoga</option>
+                    <option value="none">No Activity</option>
+                </select>
+            </div>
+
+            <button type="button" onclick="calculateCalories()">Calculate</button>
+        </form>
+
+        <div id="calorieResult" class="result" style="display: none;"></div>
+
+        <div class="suggestions" id="suggestions" style="display: none;">
+            <h3>Health Suggestions:</h3>
+            <p>• Drink plenty of water daily</p>
+            <p>• Do regular exercise or yoga</p>
+            <p>• Maintain a balanced diet</p>
+            <p>• Get enough sleep</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateCalories() {
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            const height = document.getElementById('height').value;
+            const weight = document.getElementById('weight').value;
+            const activity = document.getElementById('activity').value;
+
+            if (!age || !gender || !height || !weight || !activity) {
+                alert('Please fill out all fields');
+                return;
+            }
+
+            let calories;
+
+            // BMR calculation using Mifflin-St Jeor Equation
+            if (gender === 'male') {
+                calories = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else if (gender === 'female') {
+                calories = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            // Adjust based on activity level
+            if (activity === 'workout') {
+                calories *= 1.55; // Moderate activity
+            } else if (activity === 'yoga') {
+                calories *= 1.375; // Light activity
+            } else {
+                calories *= 1.2; // Sedentary
+            }
+
+            // Display the result
+            const resultDiv = document.getElementById('calorieResult');
+            resultDiv.innerHTML = `<h2>You need approximately <strong>${Math.round(calories)}</strong> calories per day.</h2>`;
+            resultDiv.style.display = 'block';
+
+            // Show suggestions
+            document.getElementById('suggestions').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

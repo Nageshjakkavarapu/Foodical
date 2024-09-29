@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Recognition</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .copy-icon {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+
+        #uploadedImage {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Food Recognition</h1>
+        <p>Upload an image to recognize the food</p>
+
+        <div class="mb-3">
+            <button id="chooseFileBtn" class="btn btn-secondary">Choose File</button>
+        </div>
+
+        <!-- File input -->
+        <input type="file" accept="image/*" id="imageUpload" style="display: none;">
+
+        <div id="displayContainer">
+            <img id="uploadedImage" src="" alt="Uploaded Food Image">
+            <div id="predictionResult"></div>
+
+            <!-- Text box for output and copy icon -->
+            <div class="input-group mt-3">
+                <input type="text" id="outputTextBox" class="form-control" readonly>
+                <span class="input-group-text">
+                    <img class="copy-icon" src="https://cdn-icons-png.flaticon.com/128/7073/7073707.png" onclick="copyToClipboard()" title="Copy to clipboard" alt="copy"/>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TensorFlow and Teachable Machine Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    
+    <script>
+        const modelURL = "model.json";
+        const metadataURL = "metadata.json";
+        let model, maxPredictions;
+
+        // Load the model
+        async function loadModel() {
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+            console.log("Model loaded successfully");
+        }
+
+        // Get elements
+        const chooseFileBtn = document.getElementById('chooseFileBtn');
+        const imageUpload = document.getElementById('imageUpload');
+        const uploadedImage = document.getElementById('uploadedImage');
+        const outputTextBox = document.getElementById('outputTextBox');
+
+        // Event listener for "Choose File" button
+        chooseFileBtn.addEventListener('click', () => {
+            imageUpload.click();
+        });
+
+        // Handle image upload and prediction
+        imageUpload.addEventListener('change', async function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedImage.src = URL.createObjectURL(file);
+                uploadedImage.onload = async function () {
+                    await predictImage(uploadedImage);
+                };
+            }
+        });
+
+        // Predict image function
+        async function predictImage(image) {
+            const prediction = await model.predict(image);
+            displayPrediction(prediction);
+        }
+
+        // Display prediction result
+        function displayPrediction(predictions) {
+            const predictionResult = document.getElementById('predictionResult');
+            predictionResult.innerHTML = '';
+
+            const bestPrediction = predictions.reduce((max, p) => p.probability > max.probability ? p : max, predictions[0]);
+            predictionResult.innerHTML = `<h2>Predicted Food Item: ${bestPrediction.className}</h2>`;
+            
+            // Display the prediction in the text box
+            outputTextBox.value = bestPrediction.className;
+        }
+
+        // Copy output text to clipboard
+        function copyToClipboard() {
+            outputTextBox.select();
+            document.execCommand("copy");
+        }
+
+        // Load model on page load
+        window.onload = loadModel;
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutritional Values</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #43cea2, #185a9d);
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #185a9d;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #185a9d;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #43cea2;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestions p {
+            margin: 0;
+            padding: 5px 0;
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Food Nutritional Values</h1>
+        <form id="nutritionForm">
+            <div class="form-group">
+                <label for="foodName">Food Item:</label>
+                <input type="text" id="foodName" placeholder="Enter a food item" required>
+            </div>
+
+            <button type="button" onclick="getNutritionalValues()">Get Nutritional Values</button>
+        </form>
+
+        <div id="nutritionResult" class="result" style="display: none;"></div>
+
+        <div class="suggestions" id="suggestions" style="display: none;">
+            <h3>Suggestions for this Food Item:</h3>
+            <p id="timingSuggestion"></p>
+            <p id="patientWarning"></p>
+        </div>
+    </div>
+
+    <script>
+        function getNutritionalValues() {
+            const foodName = document.getElementById('foodName').value.toLowerCase();
+
+            if (!foodName) {
+                alert('Please enter a food item name.');
+                return;
+            }
+
+            // Pre-defined nutritional values for a few food items
+            const foodData = {
+                "apple": {
+                    calories: 95,
+                    protein: "0.5g",
+                    fat: "0.3g",
+                    carbs: "25g",
+                    fiber: "4.4g",
+                    timing: "Morning or as a snack",
+                    patients: "Avoid for people with fructose intolerance"
+                },
+                "banana": {
+                    calories: 105,
+                    protein: "1.3g",
+                    fat: "0.3g",
+                    carbs: "27g",
+                    fiber: "3.1g",
+                    timing: "Before workouts or breakfast",
+                    patients: "Avoid for people with kidney disease due to high potassium"
+                },
+                "chicken": {
+                    calories: 165,
+                    protein: "31g",
+                    fat: "3.6g",
+                    carbs: "0g",
+                    fiber: "0g",
+                    timing: "Lunch or dinner",
+                    patients: "Patients with high cholesterol should avoid fried chicken"
+                },
+                "rice": {
+                    calories: 206,
+                    protein: "4.3g",
+                    fat: "0.4g",
+                    carbs: "45g",
+                    fiber: "0.6g",
+                    timing: "Lunch or early dinner",
+                    patients: "Patients with diabetes should limit consumption"
+                },
+                "broccoli": {
+                    calories: 55,
+                    protein: "3.7g",
+                    fat: "0.6g",
+                    carbs: "11g",
+                    fiber: "2.6g",
+                    timing: "Lunch or dinner",
+                    patients: "Safe for most people"
+                }
+            };
+
+            const resultDiv = document.getElementById('nutritionResult');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const timingSuggestion = document.getElementById('timingSuggestion');
+            const patientWarning = document.getElementById('patientWarning');
+
+            // Check if the food item exists in the predefined data
+            if (foodData[foodName]) {
+                const food = foodData[foodName];
+
+                // Display the nutritional values
+                resultDiv.innerHTML = `
+                    <h2>Nutritional Values for ${foodName.charAt(0).toUpperCase() + foodName.slice(1)}</h2>
+                    <p><strong>Calories:</strong> ${food.calories}</p>
+                    <p><strong>Protein:</strong> ${food.protein}</p>
+                    <p><strong>Fat:</strong> ${food.fat}</p>
+                    <p><strong>Carbs:</strong> ${food.carbs}</p>
+                    <p><strong>Fiber:</strong> ${food.fiber}</p>
+                `;
+                resultDiv.style.display = 'block';
+
+                // Display suggestions
+                timingSuggestion.textContent = `• Best time to eat: ${food.timing}`;
+                patientWarning.textContent = `• Patients who should avoid: ${food.patients}`;
+                suggestionsDiv.style.display = 'block';
+            } else {
+                resultDiv.innerHTML = `<h2>No data available for "${foodName}". Please try another food item.</h2>`;
+                resultDiv.style.display = 'block';
+                suggestionsDiv.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>

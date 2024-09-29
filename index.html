@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodiCal - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="gradient-bg">
+  <div class="login-container">
+    <h2>Welcome to FoodiCal</h2>
+    
+    <!-- Login Form -->
+    <div id="login-form">
+      <h3>Login</h3>
+      <form>
+        <input type="email" id="login-email" placeholder="Enter your email" required>
+        <div>
+        <input type="password" id="login-password" placeholder="Enter your password" required>
+        <i class="fas fa-eye-slash show-password-icon" id="togglePassword"></i>
+        </div>
+        <button type="button" onclick="login()">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+    </div>
+
+    <!-- Signup Form -->
+    <div id="signup-form" style="display: none;">
+      <h3>Sign Up</h3>
+      <form>
+        <input type="email" id="signup-email" placeholder="Enter your email" required>
+        <input type="password" id="signup-password" placeholder="Create a password" required>
+        <button type="button" onclick="signup()">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
